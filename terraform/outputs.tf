@@ -16,7 +16,17 @@ output "key_vault_name" {
 
 output "web_vm_name" {
   description = "Name of the web tier VM"
-  value       = module.compute.vm_name
+  value       = module.compute.web_vm_name
+}
+
+output "app_vm_name" {
+  description = "Name of the app tier VM"
+  value       = module.compute.app_vm_name
+}
+
+output "web_vm_public_ip" {
+  description = "Public IP of the web VM"
+  value       = module.compute.web_vm_public_ip
 }
 
 output "sql_server_name" {

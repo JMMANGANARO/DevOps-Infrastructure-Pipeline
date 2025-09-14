@@ -53,8 +53,10 @@ module "compute" {
   location           = var.location
   resource_group_name = azurerm_resource_group.main.name
   subnet_id          = module.networking.web_subnet_id
+  app_subnet_id      = module.networking.app_subnet_id  # ← Add this line
   vm_size            = var.vm_size
   key_vault_id       = module.security.key_vault_id
+  managed_identity_id = module.security.managed_identity_id  # ← Add this line
   suffix             = local.suffix
   tags               = local.common_tags
 }

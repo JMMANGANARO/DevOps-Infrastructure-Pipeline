@@ -1,0 +1,62 @@
+# terraform/modules/compute/cloud-init-web.yml
+#cloud-config
+package_update: true
+package_upgrade: true
+
+packages:
+  - nginx
+  - curl
+  - htop
+  - unzip
+
+write_files:
+  - path: /var/www/html/index.html
+    content: |
+      <!DOCTYPE html>
+      <html>
+      <head>
+          <title>DevOps Pipeline - Web Tier</title>
+          <style>
+              body { font-family: Arial, sans-serif; margin: 40px; background: #f0f8ff; }
+              .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+              .header { background: #0078d4; color: white; padding: 20px; border-radius: 5px; text-align: center; }
+              .info { margin: 20px 0; padding: 15px; background: #e6f3ff; border-radius: 5px; }
+              .status { color: #28a745; font-weight: bold; }
+          </style>
+      </head>
+      <body>
+          <div class="container">
+              <div class="header">
+                  <h1>🚀 DevOps Infrastructure Pipeline</h1>
+                  <h2>Web Tier - ${environment} Environment</h2>
+              </div>
+              <div class="info">
+                  <h3>📊 System Information</h3>
+                  <p><strong>Environment:</strong> ${environment}</p>
+                  <p><strong>Tier:</strong> Web (Frontend)</p>
+                  <p><strong>Status:</strong> <span class="status">✅ Online</span></p>
+                  <p><strong>Deployed via:</strong> Terraform + GitHub Actions</p>
+                  <p><strong>Last Updated:</strong> <span id="timestamp"></span></p>
+              </div>
+              <div class="info">
+                  <h3>🏗️ Architecture</h3>
+                  <p>This is the <strong>Web Tier</strong> of a 3-tier application:</p>
+                  <ul>
+                      <li>🌐 Web Tier (this server) - Frontend/Load balancing</li>
+                      <li>⚙️ App Tier - Business logic and APIs</li>
+                      <li>🗄️ Data Tier - Database and storage</li>
+                  </ul>
+              </div>
+          </div>
+          <script>
+              document.getElementById('timestamp').textContent = new Date().toLocaleString();
+          </script>
+      </body>
+      </html>
+    permissions: '0644'
+
+runcmd:
+  - systemctl enable nginx
+  - systemctl start nginx
+  - systemctl status nginx
+  - echo "Web server setup complete" > /tmp/setup.log

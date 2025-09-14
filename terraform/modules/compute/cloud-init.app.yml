@@ -1,0 +1,70 @@
+# terraform/modules/compute/cloud-init-app.yml
+#cloud-config
+package_update: true
+package_upgrade: true
+
+packages:
+  - nodejs
+  - npm
+  - curl
+  - htop
+  - unzip
+
+write_files:
+  - path: /opt/app/app.js
+    content: |
+      const http = require('http');
+      const os = require('os');
+      
+      const port = 8080;
+      const environment = '${environment}';
+      
+      const server = http.createServer((req, res) => {
+        const responseData = {
+          message: 'DevOps Pipeline - Application Tier',
+          environment: environment,
+          tier: 'Application',
+          hostname: os.hostname(),
+          timestamp: new Date().toISOString(),
+          status: 'healthy',
+          version: '1.0.0'
+        };
+        
+        res.writeHead(200, {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        });
+        res.end(JSON.stringify(responseData, null, 2));
+      });
+      
+      server.listen(port, () => {
+        console.log(`App server running on port ${port} in ${environment} environment`);
+      });
+    permissions: '0644'
+
+  - path: /etc/systemd/system/app.service
+    content: |
+      [Unit]
+      Description=DevOps Pipeline App
+      After=network.target
+      
+      [Service]
+      Type=simple
+      User=root
+      WorkingDirectory=/opt/app
+      ExecStart=/usr/bin/node app.js
+      Restart=always
+      RestartSec=10
+      
+      [Install]
+      WantedBy=multi-user.target
+    permissions: '0644'
+
+runcmd:
+  - mkdir -p /opt/app
+  - cd /opt/app
+  - systemctl daemon-reload
+  - systemctl enable app.service
+  - systemctl start app.service
+  - systemctl status app.service
+  - echo "App server setup complete" > /tmp/setup.log
