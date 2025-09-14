@@ -59,21 +59,3 @@ echo "Additional GitHub Secrets needed:"
 echo "AZURE_SUBSCRIPTION_ID: $SUBSCRIPTION_ID"
 echo "TERRAFORM_STORAGE_ACCOUNT: $STORAGE_ACCOUNT"
 echo "TERRAFORM_RESOURCE_GROUP: $RESOURCE_GROUP"
-
-# Save to file for reference
-cat > service-principal-info.txt << EOF
-=== DevOps Pipeline Setup Information ===
-Date: $(date)
-
-GitHub Secrets to Configure:
-AZURE_CREDENTIALS: $SP_OUTPUT
-AZURE_SUBSCRIPTION_ID: $SUBSCRIPTION_ID  
-TERRAFORM_STORAGE_ACCOUNT: $STORAGE_ACCOUNT
-TERRAFORM_RESOURCE_GROUP: $RESOURCE_GROUP
-
-Service Principal: $SERVICE_PRINCIPAL_NAME
-Storage Account: $STORAGE_ACCOUNT
-Resource Group: $RESOURCE_GROUP
-EOF
-
-echo "Information saved to: service-principal-info.txt"
