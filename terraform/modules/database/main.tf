@@ -95,29 +95,3 @@ resource "azurerm_mssql_firewall_rule" "azure_services" {
   end_ip_address   = "0.0.0.0"
 }
 
-# Diagnostic settings for monitoring
-resource "azurerm_monitor_diagnostic_setting" "sql_server" {
-  name               = "diag-sql-${var.environment}"
-  target_resource_id = azurerm_mssql_server.main.id
-  
-  # This would typically go to Log Analytics workspace
-  # storage_account_id = var.storage_account_id
-
-  enabled_log {
-    category = "SQLSecurityAuditEvents"
-  }
-
-  enabled_log {
-    category = "DevOpsOperationsAudit"
-  }
-
-  metric {
-    category = "Basic"
-    enabled  = true
-  }
-
-  metric {
-    category = "InstanceAndAppAdvanced"
-    enabled  = true
-  }
-}

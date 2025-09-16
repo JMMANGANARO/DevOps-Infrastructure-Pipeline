@@ -1,0 +1,45 @@
+#cloud-config
+# Cloud-init configuration for application server
+
+package_update: true
+package_upgrade: true
+
+packages:
+  - nginx
+  - curl
+  - wget
+  - git
+  - htop
+
+# Create application user
+users:
+  - name: appuser
+    groups: sudo
+    shell: /bin/bash
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+
+# Basic nginx configuration
+write_files:
+  - path: /var/www/html/index.html
+    content: |
+      <!DOCTYPE html>
+      <html>
+      <head>
+          <title>DevOps Pipeline - ${environment} Environment</title>
+      </head>
+      <body>
+          <h1>Welcome to ${environment} Environment</h1>
+          <p>This server was provisioned with Terraform!</p>
+          <p>Environment: ${environment}</p>
+          <p>Deployed at: $(date)</p>
+      </body>
+      </html>
+    permissions: '0644'
+
+# Commands to run
+runcmd:
+  - systemctl enable nginx
+  - systemctl start nginx
+  - echo "Cloud-init completed for ${environment}" >> /var/log/deployment.log
+
+final_message: "Cloud-init setup completed for ${environment} environment"

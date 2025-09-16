@@ -1,6 +1,10 @@
-# terraform/versions.tf
 terraform {
   required_version = ">= 1.0"
+  
+  # Backend configuration for Azure Storage
+  backend "azurerm" {
+    # Configuration will come from backend.conf file
+  }
   
   required_providers {
     azurerm = {
@@ -12,16 +16,14 @@ terraform {
       version = "~> 3.0"
     }
   }
-  
-  backend "azurerm" {
-    # Configuration will be provided via backend config files
-  }
 }
 
+# Configure the Microsoft Azure Provider
 provider "azurerm" {
   features {
-    resource_group {
-      prevent_deletion_if_contains_resources = false
+    key_vault {
+      purge_soft_delete_on_destroy    = true
+      recover_soft_deleted_key_vaults = true
     }
   }
 }

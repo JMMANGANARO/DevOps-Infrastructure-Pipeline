@@ -145,4 +145,6 @@ resource "azurerm_subnet_network_security_group_association" "app" {
 }
 
 resource "azurerm_subnet_network_security_group_association" "data" {
-  subnet_id                 = azurerm_subnet.
+  subnet_id                 = azurerm_subnet.data.id  # Added '.id'
+  network_security_group_id = azurerm_network_security_group.data.id
+}
